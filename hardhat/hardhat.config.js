@@ -7,7 +7,7 @@ module.exports = {
       gas: "auto",
       mining: {
         interval: 2000 //ms
-      }
+      },
     }
   },
   defaultNetwork: "hardhat",

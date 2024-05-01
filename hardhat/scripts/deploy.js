@@ -1,19 +1,25 @@
+require("@nomiclabs/hardhat-ethers");
 const { ethers } = require("hardhat");
 
-async function main() {
-    const MyNFT = await ethers.getContractFactory("Canvas");
+async function deploy() {
+    let users = await ethers.getSigners();
+    let owner = users[0];
 
-    const size = 10, royaltyPercent = 1;
+    console.log(`Number of users: ${users.length}`)
+    console.log(`Owner: ${owner.address}`);
 
-    const myNFT = await MyNFT.deploy(size, royaltyPercent);
-    await myNFT.deployed();
+    let canvasFactory = await ethers.getContractFactory("Canvas");
 
-    console.log("Contract deployed to address:", myNFT.address);
+    let size = 10, royaltyPercent = 1;
+    let canvas = await canvasFactory.connect(owner).deploy(size, royaltyPercent);
+    await canvas.deployed();
+
+    console.log("Canvas address: ", canvas.address);
 }
 
-main()
+deploy()
     .then(() => process.exit(0))
-    .catch((error) => {
+    .catch(error => {
         console.error(error);
         process.exit(1);
-    })
+    });
