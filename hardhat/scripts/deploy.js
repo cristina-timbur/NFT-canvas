@@ -3,8 +3,11 @@ const { ethers } = require("hardhat");
 async function main() {
     const MyNFT = await ethers.getContractFactory("Canvas");
 
-    const myNFT = await MyNFT.deploy();
+    const size = 10, royaltyPercent = 1;
+
+    const myNFT = await MyNFT.deploy(size, royaltyPercent);
     await myNFT.deployed();
+
     console.log("Contract deployed to address:", myNFT.address);
 }
 

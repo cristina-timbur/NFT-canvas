@@ -1,16 +1,27 @@
-require('dotenv').config();
-require("@nomiclabs/hardhat-ethers");
-const { API_URL, PRIVATE_KEY } = process.env;
+require('@nomiclabs/hardhat-ethers');
+
+/** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-   solidity: "0.8.1",
-   defaultNetwork: "sepolia",
-   networks: {
-      hardhat: {
-         blockGasLimit: 1000000000000000000
-      },
-      sepolia: {
-         url: API_URL,
-         accounts: [`0x${PRIVATE_KEY}`]
+  networks: {
+    hardhat: {
+      gas: "auto",
+      mining: {
+        interval: 2000 //ms
       }
-   },
-}
+    }
+  },
+  defaultNetwork: "hardhat",
+  solidity: {
+    compilers: [
+      {
+        version: '0.8.24',
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 10000
+          }
+        }
+      }
+    ]
+  }
+};
