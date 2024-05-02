@@ -23,3 +23,15 @@ Deploy the contract: ```npx hardhat run ./scripts/deploy.js --network localhost`
 Paste the contract address in scripts/interact.js
 
 Interact with the contract: ```npx hardhat run ./scripts/interact.js --network localhost```
+
+## Test frontend
+
+Setup frontend: ```cd frontend && npm install```
+
+Start frontend: ```npm start```
+
+Turn on hardhat node, deploy contract locally.
+
+Select ```localhost``` and type in the address of the deployed contract.
+
+Enjoy!
