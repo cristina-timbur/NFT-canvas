@@ -1,14 +1,14 @@
 //Contract based on [https://docs.openzeppelin.com/contracts/3.x/erc721](https://docs.openzeppelin.com/contracts/3.x/erc721)
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
+import "./Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-// import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract Canvas is ERC721, Ownable {
-    // using Counters for Counters.Counter;
-    // Counters.Counter private _tokenIds;
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
 
     struct Colour {
         uint8 red;
@@ -35,7 +35,11 @@ contract Canvas is ERC721, Ownable {
         firstOwner = msg.sender;
         royaltyPercent = _royaltyPercent;
 
-        // TODO: Add mint all NFTs functionality.
+        for (uint8 i = 0; i < _size; i++) {
+            for (uint8 j = 0; j < _size; j++) {
+                mintNFT(msg.sender);
+            }
+        }
     }
 
     function sell(uint256 pixel, uint256 price) public {
@@ -73,14 +77,14 @@ contract Canvas is ERC721, Ownable {
     }
 
     function changeNFTColour(uint256 tokenId, uint8 red, uint8 green, uint8 blue) public {
-        // require(tokenId <= _tokenIds.current(), "The NFT doesn't exist.");
+        require(tokenId <= _tokenIds.getCurrentValue(), "The NFT doesn't exist.");
         require(ownerOf(tokenId) == msg.sender, "Only the owner can modify the colour of a pixel.");
         
         pixelColours[tokenId] = Colour(red, green, blue);
     } 
 
     function getNFTColour(uint256 tokenId) public view returns (uint8, uint8, uint8) {
-        // require(tokenId <= _tokenIds.current(), "The specified NFT doesn't exist.");
+        require(tokenId <= _tokenIds.getCurrentValue(), "The specified NFT doesn't exist.");
         
         Colour memory result = pixelColours[tokenId];
 
@@ -88,13 +92,12 @@ contract Canvas is ERC721, Ownable {
     }
 
     function mintNFT(address recipient) public onlyOwner returns (uint256) {
-        // require(_tokenIds.current() < canvas_size * canvas_size, "All the possible NFTs have been already minted.");
+        require(_tokenIds.getCurrentValue() < canvas_size * canvas_size, "All the possible NFTs have been already minted.");
 
-        // _tokenIds.increment();
-
-        // uint256 newItemId = _tokenIds.current();
-        uint256 newItemId = 0;
+        uint256 newItemId = _tokenIds.getCurrentValue();
         _mint(recipient, newItemId);
+
+        _tokenIds.increment();
 
         return newItemId;
     }

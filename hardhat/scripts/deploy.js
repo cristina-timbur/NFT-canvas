@@ -11,7 +11,7 @@ async function deploy() {
 
     let canvasFactory = await ethers.getContractFactory("Canvas");
 
-    let size = 10, royaltyPercent = 1;
+    let size = 5, royaltyPercent = 1;
     let canvas = await canvasFactory.connect(owner).deploy(size, royaltyPercent);
     await canvas.deployed();
 
