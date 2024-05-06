@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Select from "react-select";
 import CanvasContract from "./Canvas.json";
+import { Color } from "./utils/types"
+import { hexToColor } from "./utils/convert"
 
 const ethers = require('ethers');
 
@@ -18,6 +20,8 @@ function App() {
   const [contract, setContract] = useState(null);
 
   const [canvasColors, setCanvasColors] = useState("");
+  const [tokenId, setTokenId] = useState(null);
+  const [color, setColor] = useState(Color);
 
   const handleProviderConnect = () => {
       const connectLocalhost = async () => {
@@ -60,6 +64,18 @@ function App() {
     ));
   };
 
+  const handleSetTokenId = event => {
+    setTokenId(event.target.value);
+  };
+
+  const handleSetColor = event => {
+    setColor(hexToColor(event.target.value));
+  };
+
+  const handleChangeColor = async () => {
+    await contract.changeNFTColour(tokenId, color.red, color.green, color.blue);
+  };
+
   const checkCanvasColors = async () => {
       if (!contract) setCanvasColors("Please set the contract first");
       else {
@@ -100,7 +116,13 @@ function App() {
         <button onClick={checkCanvasColors}>Check canvas colors</button>
         {canvasColors != "" && <p>{canvasColors}</p>}
       </div>
-
+      
+      <div>
+      <p>Change canvas colors</p>
+      Token ID <input onChange={handleSetTokenId}/>
+      New hex color <input onChange={handleSetColor} />
+      <button onClick={handleChangeColor}>Change color</button>
+      </div>
     </div>
   );
 }
