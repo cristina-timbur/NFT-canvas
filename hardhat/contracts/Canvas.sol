@@ -23,7 +23,7 @@ contract Canvas is ERC721, Ownable {
     
     address public firstOwner;
 
-    uint8 canvas_size;
+    uint256 canvas_area;
     uint256 royaltyPercent;
     string title;
 
@@ -37,13 +37,18 @@ contract Canvas is ERC721, Ownable {
         _;
     }
 
+    modifier onlyFirstOwner() {
+        require(msg.sender == firstOwner || tx.origin == firstOwner, "Only the first owner can change the title.");
+        _;
+    }
+
     modifier validToken(uint256 tokenId) {
         require(tokenId <= _tokenIds.getCurrentValue(), "The NFT doesn't exist.");
         _;
     }
 
     modifier mintedAllTokens() {
-        require(_tokenIds.getCurrentValue() < canvas_size * canvas_size, "All the possible NFTs have been already minted.");
+        require(_tokenIds.getCurrentValue() < canvas_area, "All the possible NFTs have been already minted.");
         _;
     }
 
@@ -52,8 +57,13 @@ contract Canvas is ERC721, Ownable {
         _;
     }
 
+    modifier validRoyaltyPercent() {
+        require(royaltyPercent >= 0 && royaltyPercent <= 100, "Royalty percentage must be less than or equal to 100");
+        _;
+    }
+
     constructor(uint8 _size, uint256 _royaltyPercent, string memory _title) ERC721("NFTCanvas", "XXX") Ownable(tx.origin) {
-        canvas_size = _size;
+        canvas_area = getCanvasArea(_size);
         firstOwner = tx.origin;
         royaltyPercent = _royaltyPercent;
         title = _title;
@@ -65,13 +75,15 @@ contract Canvas is ERC721, Ownable {
         }
     }
 
-    function changeTitle(string memory _title) external {
-        require(msg.sender == firstOwner || tx.origin == firstOwner, "Only the first owner can change the title");
+    function getCanvasArea(uint8 size) pure private returns (uint256) {
+        return size * size;
+    }
+
+    function changeTitle(string memory _title) onlyFirstOwner external {
         title = _title;
     }
 
     function sell(uint256 pixel, uint256 price) onlyTokenOwner(pixel) public {
-        require(ownerOf(pixel) == msg.sender, "Only the owner of the NFT can sell it.");
         pixels[pixel] = PixelInfo(price, true, msg.sender);
     }
 
@@ -95,7 +107,7 @@ contract Canvas is ERC721, Ownable {
         }
     }
     
-    function getRoyalties(uint256 price) private view returns (uint256) {
+    function getRoyalties(uint256 price) validRoyaltyPercent private view returns (uint256) {
         uint256 newPrice = royaltyPercent * price / 100;
         return newPrice;
     }
