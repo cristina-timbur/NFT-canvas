@@ -1,6 +1,6 @@
 import { ethers } from "ethers"
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react"
-import { NUM_OF_COLS, NUM_OF_ROWS } from "../utils/constants"
+import { CONTRACT_ADDRESS, NUM_OF_COLS, NUM_OF_ROWS } from "../utils/constants"
 import { Color } from "../utils/types"
 import CanvasContract from "./Canvas.json";
 
@@ -40,8 +40,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
     const account = await localhostProvider.getSigner(0);
     setSigner(account);
 
-    // Change this to match local deployment
-    const contract = new ethers.Contract("0x5fbdb2315678afecb367f032d93f642f64180aa3", CanvasContract.abi, account);
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CanvasContract.abi, account);
     setContract(contract);
   }, [])
 
@@ -81,7 +80,6 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
         } else {
           newColors.push(newColor)
         }
-        // setColors(newColors.map(color => color))
       }
     }
 

@@ -28,7 +28,7 @@ Interact with the contract: ```npx hardhat run ./scripts/interact.js --network l
 
 Turn on hardhat node, deploy contract locally.
 
-Set the address of the contract in ```canvasProvider.tsx```.
+Set the address of the contract in ```frontend/src/utils/constants.ts```.
 
 Setup frontend: ```cd frontend && npm install```
 
