@@ -26,11 +26,13 @@ Interact with the contract: ```npx hardhat run ./scripts/interact.js --network l
 
 ## Test frontend
 
-Setup frontend: ```cd frontend && npm install && npm install @chakra-ui/react```
+Turn on hardhat node, deploy contract locally.
+
+Set the address of the contract in ```canvasProvider.tsx```.
+
+Setup frontend: ```cd frontend && npm install```
 
 Start frontend: ```npm start```
-
-Turn on hardhat node, deploy contract locally.
 
 Select ```localhost``` and type in the address of the deployed contract.
 

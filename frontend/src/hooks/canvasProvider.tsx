@@ -37,10 +37,11 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
     const localhostProvider = new ethers.JsonRpcProvider();
     setProvider(localhostProvider);
 
-    const account = await localhostProvider.getSigner();
+    const account = await localhostProvider.getSigner(0);
     setSigner(account);
 
-    const contract = new ethers.Contract("0x5FbDB2315678afecb367f032d93F642f64180aa3", CanvasContract.abi, signer);
+    // Change this to match local deployment
+    const contract = new ethers.Contract("0x5fbdb2315678afecb367f032d93f642f64180aa3", CanvasContract.abi, account);
     setContract(contract);
   }, [])
 
@@ -104,7 +105,6 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
       } catch (error) {
         console.error(error);
       }
-      
     } 
 
   }, [contract, signer, provider])
