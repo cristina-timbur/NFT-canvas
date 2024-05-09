@@ -3,3 +3,9 @@ export type Color = {
   green: bigint;
   blue: bigint;
 }
+
+export type CanvasInfo = {
+  address: string;
+  size: bigint;
+  title: string;
+}
