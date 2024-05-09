@@ -26,7 +26,7 @@ Interact with the contract: ```npx hardhat run ./scripts/interact.js --network l
 
 ## Test frontend
 
-Setup frontend: ```cd frontend && npm install```
+Setup frontend: ```cd frontend && npm install && npm install @chakra-ui/react```
 
 Start frontend: ```npm start```
 

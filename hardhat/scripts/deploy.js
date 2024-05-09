@@ -22,7 +22,7 @@ async function deploy() {
 
 function saveFrontendFiles() {
     const fs = require("fs");
-    const contractsDir = path.join(__dirname, "..", "..", "frontend", "src");
+    const contractsDir = path.join(__dirname, "..", "..", "frontend", "src", "hooks");
   
     if (!fs.existsSync(contractsDir)) {
       fs.mkdirSync(contractsDir);
