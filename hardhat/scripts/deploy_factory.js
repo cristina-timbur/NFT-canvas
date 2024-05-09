@@ -9,13 +9,12 @@ async function deploy() {
     console.log(`Number of users: ${users.length}`)
     console.log(`Owner: ${owner.address}`);
 
-    let canvasFactory = await ethers.getContractFactory("Canvas");
+    let factoryFactory = await ethers.getContractFactory("Factory");
 
-    let size = 5, royaltyPercent = 1;
-    let canvas = await canvasFactory.connect(owner).deploy(size, royaltyPercent);
-    await canvas.deployed();
+    let factory = await factoryFactory.deploy();
+    await factory.deployed();
 
-    console.log("Canvas address: ", canvas.address);
+    console.log("Factory address: ", factory.address);
 
     saveFrontendFiles();
 }
@@ -28,10 +27,10 @@ function saveFrontendFiles() {
       fs.mkdirSync(contractsDir);
     }
   
-    const TokenArtifact = artifacts.readArtifactSync("Canvas");
+    const TokenArtifact = artifacts.readArtifactSync("Factory");
   
     fs.writeFileSync(
-      path.join(contractsDir, "Canvas.json"),
+      path.join(contractsDir, "Factory.json"),
       JSON.stringify(TokenArtifact, null, 2)
     );
   }

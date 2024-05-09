@@ -18,7 +18,38 @@ async function interact() {
     }
 }
 
-interact()
+async function createCanvasViaFactory() {
+    let users = await ethers.getSigners();
+    let user = users[0];
+
+    // replace this with local address
+    let deployedFactoryAddress = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9";
+    let contract = await ethers.getContractAt("Factory", deployedFactoryAddress);
+
+    let size = 5, royaltyPercent = 1;
+    let initialTitle = "My Canvas", updatedTitle = "My Beautiful Canvas";
+
+    contract.once("CanvasCreation", async (canvasAddress, size, title) => {
+        console.log(`Canvas deployed at ${canvasAddress} with size ${size}, title ${title}`);
+
+        await contract.connect(user).changeCanvasTitle(canvasAddress, updatedTitle, {
+            gasLimit: 30000000
+        });
+    });
+
+    contract.once("CanvasTitleChange", (canvasAddress, title) => {
+        console.log(`Canvas deployed at ${canvasAddress} changed title to ${title}`);
+    });
+
+    await contract.connect(user).createCanvas(size, royaltyPercent, initialTitle, {
+        gasLimit: 30000000
+    });
+
+    // wait 10s
+    await new Promise(resolve => setTimeout(resolve, 10000));
+}
+
+createCanvasViaFactory()
     .then(() => process.exit(0))
     .catch(error => {
         console.error(error);

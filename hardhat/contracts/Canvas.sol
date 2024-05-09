@@ -25,6 +25,7 @@ contract Canvas is ERC721, Ownable {
 
     uint8 canvas_size;
     uint256 royaltyPercent;
+    string title;
 
     Counters.Counter private _tokenIds;
 
@@ -51,19 +52,26 @@ contract Canvas is ERC721, Ownable {
         _;
     }
 
-    constructor(uint8 _size, uint256 _royaltyPercent) ERC721("NFTCanvas", "XXX") Ownable(msg.sender) {
+    constructor(uint8 _size, uint256 _royaltyPercent, string memory _title) ERC721("NFTCanvas", "XXX") Ownable(tx.origin) {
         canvas_size = _size;
-        firstOwner = msg.sender;
+        firstOwner = tx.origin;
         royaltyPercent = _royaltyPercent;
+        title = _title;
 
         for (uint8 i = 0; i < _size; i++) {
             for (uint8 j = 0; j < _size; j++) {
-                mintNFT(msg.sender);
+                mintNFT(tx.origin);
             }
         }
     }
 
+    function changeTitle(string memory _title) external {
+        require(msg.sender == firstOwner || tx.origin == firstOwner, "Only the first owner can change the title");
+        title = _title;
+    }
+
     function sell(uint256 pixel, uint256 price) onlyTokenOwner(pixel) public {
+        require(ownerOf(pixel) == msg.sender, "Only the owner of the NFT can sell it.");
         pixels[pixel] = PixelInfo(price, true, msg.sender);
     }
 
@@ -102,7 +110,7 @@ contract Canvas is ERC721, Ownable {
         return (result.red, result.green, result.blue);
     }
 
-    function mintNFT(address recipient) mintedAllTokens public onlyOwner returns (uint256) {
+    function mintNFT(address recipient) mintedAllTokens internal returns (uint256) {
         uint256 newItemId = _tokenIds.getCurrentValue();
 
         _mint(recipient, newItemId);
