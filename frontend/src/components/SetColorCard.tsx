@@ -39,7 +39,7 @@ const SetColorCard: React.FC = () => {
   useEffect(() => {
     setIsLoading(true)
     try {
-      if (index){
+      if (index !== undefined){
         refreshToken(index)
       }
     } catch(error) {
