@@ -73,7 +73,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
 
     for (let i = 0; i < NUM_OF_ROWS; i++) {
       for (let j = 0; j < NUM_OF_COLS; j++) {
-        const tokenId = i * NUM_OF_ROWS + j;
+        const tokenId = i * NUM_OF_COLS + j;
         const newColor = await getNFTColorByToken(tokenId)
         if (newColor === undefined) {
           newColors.push({red: BigInt(-1), green: BigInt(-1), blue: BigInt(-1)})
