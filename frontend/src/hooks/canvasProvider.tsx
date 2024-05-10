@@ -2,10 +2,9 @@ import { ethers } from "ethers"
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react"
 import { Color } from "../utils/types"
 import CanvasContract from "./Canvas.json";
+import useFactory from "./factoryProvider";
 
 type CanvasContextValue = {
-  provider?: ethers.JsonRpcProvider;
-  signer?: ethers.JsonRpcSigner;
   contract?: ethers.Contract;
   size: number,
   title: string,
@@ -36,8 +35,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
   children
 }) => {
   // etherjs state
-  const [provider, setProvider] = useState<ethers.JsonRpcProvider>()
-  const [signer, setSigner] = useState<ethers.JsonRpcSigner>()
+  const { provider, signer } = useFactory();
 
   // canvas-specific state
   const [contract, setContract] = useState<ethers.Contract>()
@@ -45,14 +43,6 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
   const [title, setTitle] = useState<string>()
 
   const [colors, setColors] = useState<Color[]>([])
-
-  const setupProviderSigner = async () => {
-    const localhostProvider = new ethers.JsonRpcProvider();
-    setProvider(localhostProvider);
-
-    const account = await localhostProvider.getSigner(0);
-    setSigner(account);
-  }
 
   const changeCanvas = (address: string, size: number, title: string) => {
     const contract = new ethers.Contract(address, CanvasContract.abi, signer);
@@ -111,15 +101,6 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
 
 
   useEffect(() => {
-    try {
-      setupProviderSigner()
-    } catch (error) {
-      console.error(error)
-    }
-  }, [])
-
-
-  useEffect(() => {
     if (contract !== undefined && signer !== undefined && provider !== undefined) {
       try {
         createCanvas()
@@ -132,8 +113,6 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
 
   return (
     <CanvasContext.Provider value={{
-      signer: signer,
-      provider: provider,
       contract: contract,
       size: size,
       title: title ? title : "",

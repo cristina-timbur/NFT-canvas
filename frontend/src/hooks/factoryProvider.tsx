@@ -5,6 +5,8 @@ import FactoryContract from "./Factory.json";
 import { CanvasInfo } from "../utils/types";
 
 type FactoryContextValue = {
+  provider?: ethers.JsonRpcProvider;
+  signer?: ethers.JsonRpcSigner;
   canvases: CanvasInfo[],
   loading: boolean,
   createCanvas: (size: number, royaltyPercent: number, title: string) => Promise<void>,
@@ -88,7 +90,7 @@ export const FactoryProvider: React.FC<FactoryProviderProps> = ({
     setCanvases(canvasesInfo);
   }
 
-  const handleFactory = useCallback(async () => {
+  const handleFactory = async () => {
     const localhostProvider = new ethers.JsonRpcProvider();
     setProvider(localhostProvider);
 
@@ -99,7 +101,7 @@ export const FactoryProvider: React.FC<FactoryProviderProps> = ({
     setContract(factory_contract);
 
     await populateCanvases(localhostProvider, factory_contract);
-  }, [])
+  }
 
   useEffect(() => {
     try {
@@ -127,6 +129,8 @@ export const FactoryProvider: React.FC<FactoryProviderProps> = ({
 
   return (
     <FactoryContext.Provider value={{
+      provider: provider,
+      signer: signer,
       canvases: canvases,
       loading: loading,
       createCanvas: createCanvas,

@@ -46,14 +46,14 @@ const MainPage: React.FC = () => {
 
       <form onSubmit={handleCanvasCreation}>
         <div>
-          <label htmlFor="sizeInput">Enter the canvas size (between 3 and 20):</label>
+          <label htmlFor="sizeInput">Enter the canvas size (between 3 and 15):</label>
           <input
             type="number"
             id="sizeInput"
             value={size}
             onChange={(e) => setSize(parseInt(e.target.value))}
             min={3}
-            max={20}
+            max={15}
             required
           />
         </div>
