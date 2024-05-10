@@ -1,18 +1,58 @@
+import { ethers } from 'ethers'
 import { Button, Flex, Input, Text } from '@chakra-ui/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import useCanvas from '../hooks/canvasProvider'
 import usePickedPixel from '../hooks/pickedPixelProvider'
 import { hexToColor, rgbToHex } from '../utils/convert'
+import useFactory from "../hooks/factoryProvider"
 
 const SetColorCard: React.FC = () => {
 
   const { index } = usePickedPixel()
-  const { colors, setColor, refreshToken } = useCanvas()
-  
+  const { contract, colors, setColor, refreshToken } = useCanvas()
+  const { signer } = useFactory()
+
   const [currentColor, setCurrentColor] = useState<string>('#000000')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [shootEffect, setShootEffect] = useState<boolean>(false)
-  
+  const [isOwner, setIsOwner] = useState<boolean>(false)
+  const [salePrice, setSalePrice] = useState<string>('')
+  const [isForSale, setIsForSale] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (index !== undefined && contract !== undefined && signer !== undefined) {
+      contract.ownerOf(index)
+        .then((owner) => {
+          signer?.getAddress()
+            .then((signerAddress) => {
+            setIsOwner(owner === signerAddress);
+          })
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+
+      contract.getIsAvailableForSell(index)
+        .then((availableForSell) => {
+          setIsForSale(availableForSell);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      
+      contract.getSalePrice(index)
+        .then((res) => {
+          setSalePrice(ethers.formatEther(res));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      setIsOwner(false);
+      setIsForSale(false);
+    }
+  }, [index, contract, signer]);
+
   useEffect(() => {
     const currentValue =
       index === undefined ? '#000000' : rgbToHex(colors[index].red, colors[index].green, colors[index].blue)
@@ -36,6 +76,46 @@ const SetColorCard: React.FC = () => {
     setShootEffect(val)
   }
 
+  const onPriceSet = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setSalePrice(event.currentTarget.value)
+  }, [])
+
+  const putForSale = useCallback(() => {
+    if (index !== undefined && contract !== undefined && salePrice !== '') {
+      contract.sell(index, ethers.parseEther(salePrice)) // converting ethers to wei
+        .then(() => {
+          setIsForSale(true);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [index, contract, salePrice]);
+
+  const buyPixel = useCallback(() => {
+    if (index !== undefined && contract !== undefined) {
+      contract.buy(index)
+        .then(() => {
+          setIsForSale(false);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [index, contract, salePrice]);
+
+  const revertSell = useCallback(() => {
+    if (index !== undefined && contract !== undefined) {
+      contract.revertSell(index)
+        .then(() => {
+          setIsForSale(false);
+        })
+        .catch((error) => {
+          console.error("Error reverting sell:", error);
+        });
+    }
+  }, [index, contract]);
+
   useEffect(() => {
     setIsLoading(true)
     try {
@@ -49,14 +129,49 @@ const SetColorCard: React.FC = () => {
   }, [shootEffect])
 
   return (
-    <Flex bgColor='#BFBFBF' borderRadius='0.5rem'flexDir='column' padding='0.5rem' alignItems='center' gridGap='0.5rem' width='6rem'>
+    <Flex
+      bgColor='#BFBFBF'
+      borderRadius='0.5rem'
+      flexDir='column'
+      padding='0.5rem'
+      alignItems='center'
+      gridGap='0.5rem'
+      width='6rem'
+    >
       <Text>{`Pixel: ${index}`}</Text>
-      <Input type='color' value={currentColor} onChange={onColorPicked}/>
       
-      <Button onClick={onSetPress}>Set Color</Button>
+      {isOwner ? (
+        <>
+          <Input type='color' value={currentColor} onChange={onColorPicked}/>
+          <Button onClick={onSetPress}>Set Color</Button>
+          {!isForSale ? (
+            <>
+              <Input
+                type='text'
+                placeholder='Sale Price'
+                value={salePrice}
+                onChange={onPriceSet}
+              />
+              <Button onClick={putForSale}>Put for Sale</Button>
+            </>
+          ) : (
+            <Button onClick={revertSell}>Revert Sell</Button>
+          )}
+        </>
+      ) : (
+        isForSale && (
+          <>
+            <Text>{`This pixel is out for sale for ${salePrice}`}</Text>
+            {/* TODO: fix buy pixel functionality */}
+            {/* <Button onClick={buyPixel}>Buy Pixel</Button> */}
+          </>
+        )
+      )}  
+      
       <Button onClick={refreshPixel}>{isLoading ? 'Loading...' :'Refresh Pixel'}</Button>
+
     </Flex>
-  )
-}
+  );
+};
 
 export default SetColorCard

@@ -79,6 +79,14 @@ contract Canvas is ERC721, Ownable {
         return size * size;
     }
 
+    function getIsAvailableForSell(uint256 index) public view returns (bool) {
+        return pixels[index].availableForSell;
+    }
+
+    function getSalePrice(uint256 index) public view returns (uint256) {
+        return pixels[index].price;
+    }
+
     function changeTitle(string memory _title) onlyFirstOwner external {
         title = _title;
     }
