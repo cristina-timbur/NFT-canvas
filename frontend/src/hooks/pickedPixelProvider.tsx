@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from "react"
+import React, { createContext, useContext, useEffect, useState } from "react"
+import useCanvas from "./canvasProvider";
 
 type PickedPixelContextValue = {
   index?: number;
@@ -19,6 +20,12 @@ export const PickedPixelProvider: React.FC<PickedPixelProviderProps> = ({
   children
 }) => {
   const [index, setIndex] = useState<number>()
+
+  // reset the color picker when moving between canvases
+  const { contract } = useCanvas();
+  useEffect(() => {
+      setIndex(undefined);
+  }, [contract])
 
   return (
     <PickedPixelContext.Provider value={{

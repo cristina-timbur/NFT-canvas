@@ -1,17 +1,17 @@
 import React from 'react'
 import useCanvas from '../../hooks/canvasProvider'
-import { NUM_OF_COLS, CELL_SIZE } from '../../utils/constants'
 import { Box, Grid } from '@chakra-ui/react'
 import PixelCell from './PixelCell'
 import usePickedPixel from '../../hooks/pickedPixelProvider'
+import { CELL_SIZE } from '../../utils/constants'
 
 const PixelGrid: React.FC = () => {
-  const { colors } = useCanvas()
+  const { colors, size } = useCanvas()
   const { setIndex } = usePickedPixel()
 
   return (
     <Grid
-      gridTemplateColumns={`repeat(${NUM_OF_COLS}, ${CELL_SIZE}rem)`}
+      gridTemplateColumns={`repeat(${size}, ${CELL_SIZE}rem)`}
       alignContent='start'
       height='auto'
     >

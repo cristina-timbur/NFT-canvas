@@ -1,6 +1,5 @@
 import { ethers } from "ethers"
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react"
-import { CONTRACT_ADDRESS, NUM_OF_COLS, NUM_OF_ROWS } from "../utils/constants"
 import { Color } from "../utils/types"
 import CanvasContract from "./Canvas.json";
 
@@ -8,13 +7,19 @@ type CanvasContextValue = {
   provider?: ethers.JsonRpcProvider;
   signer?: ethers.JsonRpcSigner;
   contract?: ethers.Contract;
+  size: number,
+  title: string,
   colors: Color[];
+  changeCanvas: (address: string, size: number, title: string) => void;
   setColor: (tokenId: number, color: Color) => void;
   refreshToken: (tokenId: number) => Promise<void>;
 }
 
 const defaultValue: CanvasContextValue = {
   colors: [],
+  size: 1,
+  title: "",
+  changeCanvas: () => {},
   setColor: () => {return;},
   refreshToken: async () => {return;}
 }
@@ -28,21 +33,31 @@ interface CanvasProviderProps {
 export const CanvasProvider: React.FC<CanvasProviderProps> = ({
   children
 }) => {
+  // etherjs state
   const [provider, setProvider] = useState<ethers.JsonRpcProvider>()
   const [signer, setSigner] = useState<ethers.JsonRpcSigner>()
+
+  // canvas-specific state
   const [contract, setContract] = useState<ethers.Contract>()
+  const [size, setSize] = useState<number>(5)
+  const [title, setTitle] = useState<string>()
+
   const [colors, setColors] = useState<Color[]>([])
 
-  const handleContract = useCallback(async () => {
+  const setupProviderSigner = async () => {
     const localhostProvider = new ethers.JsonRpcProvider();
     setProvider(localhostProvider);
 
     const account = await localhostProvider.getSigner(0);
     setSigner(account);
+  }
 
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, CanvasContract.abi, account);
-    setContract(contract);
-  }, [])
+  const changeCanvas = (address: string, size: number, title: string) => {
+      const contract = new ethers.Contract(address, CanvasContract.abi, signer);
+      setContract(contract);
+      setSize(size);
+      setTitle(title);
+  }
 
   const getNFTColorByToken = useCallback(async (tokenId: number): Promise<Color | undefined> => {
     const color = await contract?.getNFTColour(tokenId)
@@ -71,9 +86,9 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
   const createCanvas = useCallback(async () => {
     const newColors: Color[] = []
 
-    for (let i = 0; i < NUM_OF_ROWS; i++) {
-      for (let j = 0; j < NUM_OF_COLS; j++) {
-        const tokenId = i * NUM_OF_COLS + j;
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
+        const tokenId = i * size + j;
         const newColor = await getNFTColorByToken(tokenId)
         if (newColor === undefined) {
           newColors.push({red: BigInt(-1), green: BigInt(-1), blue: BigInt(-1)})
@@ -89,7 +104,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
 
   useEffect(() => {
     try {
-      handleContract()
+      setupProviderSigner()
     } catch(error) {
       console.error(error)
     }
@@ -112,7 +127,10 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
       signer: signer,
       provider: provider,
       contract: contract,
+      size: size,
+      title: title ? title : "",
       colors: colors,
+      changeCanvas: changeCanvas,
       setColor: setColor,
       refreshToken: refreshToken,
     }}>

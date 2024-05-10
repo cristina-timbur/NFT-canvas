@@ -5,18 +5,20 @@ import LoadingBar from "./LoadingBar";
 import PixelGrid from "./grid/PixelGrid";
 import SetColorCard from "./SetColorCard";
 import useFactory from "../hooks/factoryProvider";
+import useCanvas from "../hooks/canvasProvider";
 
 const MainPage: React.FC = () => {
 
   const { index } = usePickedPixel()
   const { canvases } = useFactory()
+  const { changeCanvas } = useCanvas()
 
   return (
     <div>
       <ul>
         {
           canvases.map((canvasInfo, idx) => (
-            <li key={idx}>Address={canvasInfo.address} size={canvasInfo.size.toString()} title={canvasInfo.title}</li>
+            <li key={idx} onClick={() => changeCanvas(canvasInfo.address, Number(canvasInfo.size), canvasInfo.title)}>Address={canvasInfo.address} size={canvasInfo.size.toString()} title={canvasInfo.title}</li>
           ))
         }
       </ul>

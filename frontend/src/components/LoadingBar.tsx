@@ -1,13 +1,12 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import React, { useMemo } from 'react'
 import useCanvas from '../hooks/canvasProvider'
-import { NUM_OF_COLS, NUM_OF_ROWS } from '../utils/constants';
 
 
 const LoadingBar: React.FC = () => {
-  const { colors } = useCanvas();
+  const { colors, size } = useCanvas();
   const percent = useMemo(() => {
-    return Math.trunc(colors.length / (NUM_OF_COLS * NUM_OF_ROWS) * 100)
+    return Math.trunc(colors.length / (size * size) * 100)
   }, [colors.length])
   return (
     <Flex
@@ -35,7 +34,7 @@ const LoadingBar: React.FC = () => {
       />
       <Flex width='60%' alignItems='center' gridGap='0.5rem' justifyContent='space-between'>
         <Text zIndex={1} ml='0.5rem'>{`${percent}%`}</Text>
-        <Text zIndex={1} fontSize='0.75rem'>{`${colors.length}/${NUM_OF_COLS * NUM_OF_ROWS}`}</Text>
+        <Text zIndex={1} fontSize='0.75rem'>{`${colors.length}/${size * size}`}</Text>
       </Flex>
 
 
