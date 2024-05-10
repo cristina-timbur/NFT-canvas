@@ -11,6 +11,7 @@ type CanvasContextValue = {
   title: string,
   colors: Color[];
   changeCanvas: (address: string, size: number, title: string) => void;
+  unsetCanvas: () => void;
   setColor: (tokenId: number, color: Color) => void;
   refreshToken: (tokenId: number) => Promise<void>;
 }
@@ -19,9 +20,10 @@ const defaultValue: CanvasContextValue = {
   colors: [],
   size: 1,
   title: "",
-  changeCanvas: () => {},
-  setColor: () => {return;},
-  refreshToken: async () => {return;}
+  changeCanvas: () => { },
+  unsetCanvas: () => { },
+  setColor: () => { return; },
+  refreshToken: async () => { return; }
 }
 
 const CanvasContext = createContext<CanvasContextValue>(defaultValue)
@@ -53,10 +55,16 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
   }
 
   const changeCanvas = (address: string, size: number, title: string) => {
-      const contract = new ethers.Contract(address, CanvasContract.abi, signer);
-      setContract(contract);
-      setSize(size);
-      setTitle(title);
+    const contract = new ethers.Contract(address, CanvasContract.abi, signer);
+    setContract(contract);
+    setSize(size);
+    setTitle(title);
+  }
+
+  // reset current canvas when clicking the back button
+  const unsetCanvas = () => {
+    setContract(undefined);
+    setColors([]);
   }
 
   const getNFTColorByToken = useCallback(async (tokenId: number): Promise<Color | undefined> => {
@@ -91,7 +99,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
         const tokenId = i * size + j;
         const newColor = await getNFTColorByToken(tokenId)
         if (newColor === undefined) {
-          newColors.push({red: BigInt(-1), green: BigInt(-1), blue: BigInt(-1)})
+          newColors.push({ red: BigInt(-1), green: BigInt(-1), blue: BigInt(-1) })
         } else {
           newColors.push(newColor)
         }
@@ -105,7 +113,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
   useEffect(() => {
     try {
       setupProviderSigner()
-    } catch(error) {
+    } catch (error) {
       console.error(error)
     }
   }, [])
@@ -118,7 +126,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
       } catch (error) {
         console.error(error);
       }
-    } 
+    }
 
   }, [contract, signer, provider])
 
@@ -131,6 +139,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
       title: title ? title : "",
       colors: colors,
       changeCanvas: changeCanvas,
+      unsetCanvas: unsetCanvas,
       setColor: setColor,
       refreshToken: refreshToken,
     }}>
