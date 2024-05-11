@@ -99,20 +99,20 @@ contract Canvas is ERC721, Ownable {
         pixels[pixel] = PixelInfo(0, false, msg.sender);
     }
 
-    function buy(uint256 pixel) isAvailableForSell(pixel) payable public {
+function buy(uint256 pixel) isAvailableForSell(pixel) payable public {
         PixelInfo memory currentPixel = pixels[pixel];
         
-        if (currentPixel.owner == ownerOf(pixel)) {
-            safeTransferFrom(currentPixel.owner, msg.sender, pixel);
-            payable(currentPixel.owner).transfer(currentPixel.price);
-            
-            payable(firstOwner).transfer(getRoyalties(currentPixel.price));
-            
-            pixels[pixel] = PixelInfo(currentPixel.price, false, msg.sender);
-        } 
-        else {
-            pixels[pixel] = PixelInfo(currentPixel.price, false, ownerOf(pixel));
-        }
+        require(currentPixel.owner == ownerOf(pixel), "Pixel not owned by current owner");
+        require(msg.value >= currentPixel.price, "Insufficient payment");
+
+        _approve(msg.sender, pixel, address(0));
+        safeTransferFrom(currentPixel.owner, msg.sender, pixel);
+        
+        payable(currentPixel.owner).transfer(currentPixel.price);
+
+        payable(firstOwner).transfer(getRoyalties(currentPixel.price));
+
+        pixels[pixel] = PixelInfo(currentPixel.price, false, msg.sender);
     }
     
     function getRoyalties(uint256 price) validRoyaltyPercent private view returns (uint256) {
