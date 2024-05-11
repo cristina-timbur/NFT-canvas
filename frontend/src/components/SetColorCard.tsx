@@ -16,8 +16,9 @@ const SetColorCard: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [shootEffect, setShootEffect] = useState<boolean>(false)
   const [isOwner, setIsOwner] = useState<boolean>(false)
-  const [salePrice, setSalePrice] = useState<string>('')
+  const [salePrice, setSalePrice] = useState<number>(0)
   const [isForSale, setIsForSale] = useState<boolean>(false)
+  const [isBuying, setIsBuying] = useState<boolean>(false)
 
   useEffect(() => {
     if (index !== undefined && contract !== undefined && signer !== undefined) {
@@ -42,7 +43,7 @@ const SetColorCard: React.FC = () => {
       
       contract.getSalePrice(index)
         .then((res) => {
-          setSalePrice(ethers.formatEther(res));
+          setSalePrice(res);
         })
         .catch((error) => {
           console.error(error);
@@ -51,13 +52,13 @@ const SetColorCard: React.FC = () => {
       setIsOwner(false);
       setIsForSale(false);
     }
-  }, [index, contract, signer]);
+  }, [index, contract, signer, isOwner]);
 
   useEffect(() => {
     const currentValue =
       index === undefined ? '#000000' : rgbToHex(colors[index].red, colors[index].green, colors[index].blue)
     setCurrentColor(currentValue)
-
+    
   }, [index])
 
   const onColorPicked = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,14 +76,14 @@ const SetColorCard: React.FC = () => {
     const val = !shootEffect
     setShootEffect(val)
   }
-
+  
   const onPriceSet = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSalePrice(event.currentTarget.value)
+    setSalePrice(parseInt(event.currentTarget.value))
   }, [])
 
   const putForSale = useCallback(() => {
-    if (index !== undefined && contract !== undefined && salePrice !== '') {
-      contract.sell(index, ethers.parseEther(salePrice)) // converting ethers to wei
+    if (index !== undefined && contract !== undefined) {
+      contract.sell(index, salePrice)
         .then(() => {
           setIsForSale(true);
         })
@@ -92,15 +93,19 @@ const SetColorCard: React.FC = () => {
     }
   }, [index, contract, salePrice]);
 
-  const buyPixel = useCallback(() => {
+  const buyPixel = useCallback(async () => {
     if (index !== undefined && contract !== undefined) {
-      contract.buy(index)
-        .then(() => {
-          setIsForSale(false);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      try {
+        setIsBuying(true);
+        const transaction = await contract.buy(index, { gasLimit: 3000000, value: salePrice });
+        await transaction.wait();
+        setIsForSale(false);
+        setIsOwner(true);
+      } catch (error) {
+        console.error("Error buying pixel:", error);
+      } finally {
+        setIsBuying(false);
+      }
     }
   }, [index, contract, salePrice]);
 
@@ -120,11 +125,11 @@ const SetColorCard: React.FC = () => {
     setIsLoading(true)
     try {
       if (index !== undefined){
-        refreshToken(index)
-      }
-    } catch(error) {
-      console.error(error)
+      refreshToken(index)
     }
+  } catch(error) {
+    console.error(error)
+  }
     setIsLoading(false)
   }, [shootEffect])
 
@@ -139,7 +144,7 @@ const SetColorCard: React.FC = () => {
       width='6rem'
     >
       <Text>{`Pixel: ${index}`}</Text>
-      
+
       {isOwner ? (
         <>
           <Input type='color' value={currentColor} onChange={onColorPicked}/>
@@ -147,7 +152,7 @@ const SetColorCard: React.FC = () => {
           {!isForSale ? (
             <>
               <Input
-                type='text'
+                type='number'
                 placeholder='Sale Price'
                 value={salePrice}
                 onChange={onPriceSet}
@@ -162,8 +167,11 @@ const SetColorCard: React.FC = () => {
         isForSale && (
           <>
             <Text>{`This pixel is out for sale for ${salePrice}`}</Text>
-            {/* TODO: fix buy pixel functionality */}
-            {/* <Button onClick={buyPixel}>Buy Pixel</Button> */}
+            {isBuying ? (
+              <Text>Loading...</Text>
+            ) : (
+              <Button onClick={buyPixel}>Buy Pixel</Button>
+            )}
           </>
         )
       )}  
