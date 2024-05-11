@@ -110,6 +110,8 @@ export const FactoryProvider: React.FC<FactoryProviderProps> = ({
 
   const handleChangeTitle = async (title: string) => {
     await contract?.changeCanvasTitle(currentCanvasAddress, title);
+    setCanvases(canvases.map((canvasInfo, index) => currentCanvasAddress === canvasInfo.address ? 
+            { address: currentCanvasAddress, size: canvasInfo.size, title: title } : canvasInfo))
   };
 
   useEffect(() => {
