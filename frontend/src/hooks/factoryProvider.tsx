@@ -10,12 +10,16 @@ type FactoryContextValue = {
   canvases: CanvasInfo[],
   loading: boolean,
   createCanvas: (size: number, royaltyPercent: number, title: string) => Promise<void>,
+  handleChangeTitle: (title: string) => void,
+  setCurrentCanvasAddress: (address: string) => void
 }
 
 const defaultValue: FactoryContextValue = {
   canvases: [],
   loading: false,
   createCanvas: async () => { },
+  handleChangeTitle: async (title: string) => { },
+  setCurrentCanvasAddress: () => { }
 }
 
 const FactoryContext = createContext<FactoryContextValue>(defaultValue)
@@ -32,6 +36,7 @@ export const FactoryProvider: React.FC<FactoryProviderProps> = ({
   const [contract, setContract] = useState<ethers.Contract>()
   const [canvases, setCanvases] = useState<CanvasInfo[]>([])
   const [loading, setLoading] = useState<boolean>(false)
+  const [currentCanvasAddress, setCurrentCanvasAddress] = useState<string>("")
 
   const populateCanvases = async (provider: ethers.JsonRpcProvider, factory_contract: ethers.Contract) => {
     const creationEventFilter = {
@@ -103,6 +108,10 @@ export const FactoryProvider: React.FC<FactoryProviderProps> = ({
     await populateCanvases(localhostProvider, factory_contract);
   }
 
+  const handleChangeTitle = async (title: string) => {
+    await contract?.changeCanvasTitle(currentCanvasAddress, title);
+  };
+
   useEffect(() => {
     try {
       handleFactory()
@@ -132,6 +141,8 @@ export const FactoryProvider: React.FC<FactoryProviderProps> = ({
       provider: provider,
       signer: signer,
       canvases: canvases,
+      handleChangeTitle: handleChangeTitle,
+      setCurrentCanvasAddress: setCurrentCanvasAddress,
       loading: loading,
       createCanvas: createCanvas,
     }}>

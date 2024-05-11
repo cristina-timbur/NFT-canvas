@@ -5,10 +5,11 @@ import { useNavigate } from 'react-router-dom';
 
 const MainPage: React.FC = () => {
   const navigate = useNavigate();
-  const { canvases, loading, createCanvas } = useFactory()
+  const { canvases, loading, createCanvas, setCurrentCanvasAddress } = useFactory()
   const { changeCanvas } = useCanvas()
 
   const handleChangeCanvas = (address: string, size: number, title: string) => {
+    setCurrentCanvasAddress(address);
     changeCanvas(address, size, title);
     navigate("/canvas", {
       replace: true

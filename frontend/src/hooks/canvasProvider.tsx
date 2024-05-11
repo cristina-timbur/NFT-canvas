@@ -9,6 +9,7 @@ type CanvasContextValue = {
   size: number,
   title: string,
   colors: Color[];
+  setTitle: (title: string) => void;
   changeCanvas: (address: string, size: number, title: string) => void;
   unsetCanvas: () => void;
   setColor: (tokenId: number, color: Color) => void;
@@ -19,6 +20,7 @@ const defaultValue: CanvasContextValue = {
   colors: [],
   size: 1,
   title: "",
+  setTitle: () => { },
   changeCanvas: () => { },
   unsetCanvas: () => { },
   setColor: () => { return; },
@@ -117,6 +119,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
       size: size,
       title: title ? title : "",
       colors: colors,
+      setTitle: setTitle,
       changeCanvas: changeCanvas,
       unsetCanvas: unsetCanvas,
       setColor: setColor,
