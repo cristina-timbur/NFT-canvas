@@ -11,7 +11,6 @@ async function interact() {
 
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
-            // TODO: fix logic for getting the cell index from (i, j) coordinates
             let colour = await contract.connect(user).getNFTColour(i * 5 + j);
             console.log(`Color of pixel (${i}, ${j}) is ${colour}`);
         }
