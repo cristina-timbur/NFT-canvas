@@ -34,20 +34,20 @@ const MainPage: React.FC = () => {
     navigate("/", { replace: true });
   };
 
-    useEffect(() => {
-        if (contract !== undefined) {
-            contract.owner()
-            .then((owner) => {
-            signer?.getAddress()
-                .then((signerAddress) => {
-                setIsOwner(owner === signerAddress);
+  useEffect(() => {
+    if (contract !== undefined) {
+      contract.owner()
+        .then((owner) => {
+          signer?.getAddress()
+            .then((signerAddress) => {
+              setIsOwner(owner === signerAddress);
             })
-            })
-            .catch((e) => {
-            console.error(e);
-            });
-        }   
-    }, [contract, isOwner])
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    }
+  }, [contract, isOwner])
 
   const handleTitleChange = () => {
     if (typingTitle.trim()) {
@@ -62,32 +62,32 @@ const MainPage: React.FC = () => {
     <div>
       <button onClick={handleNavigateBack}>Back</button>
       <h2>{title}</h2>
-        {isOwner ?  (
-          <>
-            <Input
-                type="text"
-                placeholder="New title"
-                value={typingTitle}
-                onChange={(e) => setTypingTitle(e.target.value)}
-                minLength={3}
-                maxLength={50}
-                required
-            />
-            <Button onClick={handleTitleChange}>Change Title</Button>
-            </>
-        ) 
-          : (<></>)
-        }
+      {isOwner ? (
+        <>
+          <Input
+            type="text"
+            placeholder="New title"
+            value={typingTitle}
+            onChange={(e) => setTypingTitle(e.target.value)}
+            minLength={3}
+            maxLength={50}
+            required
+          />
+          <Button onClick={handleTitleChange}>Change Title</Button>
+        </>
+      )
+        : (<></>)
+      }
       <LoadingBar />
-            <Flex
-                gridGap='1rem'
-                alignContent='center'
-                justifyContent='center'
-            >
+      <Flex
+        gridGap='1rem'
+        alignContent='center'
+        justifyContent='center'
+      >
         <PixelGrid />
-                {index !== undefined &&
-                    <SetColorCard />
-                }
+        {index !== undefined &&
+          <SetColorCard />
+        }
       </Flex>
     </div>
   );

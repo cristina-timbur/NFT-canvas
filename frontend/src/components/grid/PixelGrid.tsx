@@ -18,7 +18,7 @@ const PixelGrid: React.FC = () => {
       {
         colors.map((color, index) => (
           <Box key={index} onClick={() => setIndex(index)}>
-            <PixelCell color={color} index={index}/>
+            <PixelCell color={color} index={index} />
           </Box>
         ))
       }

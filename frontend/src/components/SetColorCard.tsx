@@ -26,8 +26,8 @@ const SetColorCard: React.FC = () => {
         .then((owner) => {
           signer?.getAddress()
             .then((signerAddress) => {
-            setIsOwner(owner === signerAddress);
-          })
+              setIsOwner(owner === signerAddress);
+            })
         })
         .catch((e) => {
           console.error(e);
@@ -40,7 +40,7 @@ const SetColorCard: React.FC = () => {
         .catch((error) => {
           console.error(error);
         });
-      
+
       contract.getSalePrice(index)
         .then((res) => {
           setSalePrice(res);
@@ -58,7 +58,7 @@ const SetColorCard: React.FC = () => {
     const currentValue =
       index === undefined ? '#000000' : rgbToHex(colors[index].red, colors[index].green, colors[index].blue)
     setCurrentColor(currentValue)
-    
+
   }, [index])
 
   const onColorPicked = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +67,7 @@ const SetColorCard: React.FC = () => {
 
   const onSetPress = useCallback(() => {
     const newColor = hexToColor(currentColor)
-    if (newColor !== undefined && index !== undefined){
+    if (newColor !== undefined && index !== undefined) {
       setColor(index, newColor)
     }
   }, [currentColor, index])
@@ -76,7 +76,7 @@ const SetColorCard: React.FC = () => {
     const val = !shootEffect
     setShootEffect(val)
   }
-  
+
   const onPriceSet = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSalePrice(parseInt(event.currentTarget.value))
   }, [])
@@ -124,12 +124,12 @@ const SetColorCard: React.FC = () => {
   useEffect(() => {
     setIsLoading(true)
     try {
-      if (index !== undefined){
-      refreshToken(index)
+      if (index !== undefined) {
+        refreshToken(index)
+      }
+    } catch (error) {
+      console.error(error)
     }
-  } catch(error) {
-    console.error(error)
-  }
     setIsLoading(false)
   }, [shootEffect])
 
@@ -147,7 +147,7 @@ const SetColorCard: React.FC = () => {
 
       {isOwner ? (
         <>
-          <Input type='color' value={currentColor} onChange={onColorPicked}/>
+          <Input type='color' value={currentColor} onChange={onColorPicked} />
           <Button onClick={onSetPress}>Set Color</Button>
           {!isForSale ? (
             <>
@@ -174,9 +174,9 @@ const SetColorCard: React.FC = () => {
             )}
           </>
         )
-      )}  
-      
-      <Button onClick={refreshPixel}>{isLoading ? 'Loading...' :'Refresh Pixel'}</Button>
+      )}
+
+      <Button onClick={refreshPixel}>{isLoading ? 'Loading...' : 'Refresh Pixel'}</Button>
 
     </Flex>
   );

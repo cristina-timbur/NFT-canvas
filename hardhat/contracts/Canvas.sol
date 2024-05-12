@@ -32,6 +32,8 @@ contract Canvas is ERC721, Ownable {
     mapping(uint256 => PixelInfo) pixels;
     mapping(uint256 => Colour) pixelColours;
 
+    event ChangedColor(uint256 tokenId, uint8 red, uint8 green, uint8 blue);
+
     modifier onlyTokenOwner(uint256 tokenId) {
         require(ownerOf(tokenId) == msg.sender, "Only the owner of the NFT can apply changes to its current state.");
         _;
@@ -125,6 +127,7 @@ contract Canvas is ERC721, Ownable {
 
     function changeNFTColour(uint256 tokenId, uint8 red, uint8 green, uint8 blue) validToken(tokenId) onlyTokenOwner(tokenId) public {
         pixelColours[tokenId] = Colour(red, green, blue);
+        emit ChangedColor(tokenId, red, green, blue);
     } 
 
     function getNFTColour(uint256 tokenId) validToken(tokenId) public view returns (uint8, uint8, uint8) {
