@@ -16,7 +16,7 @@ const PixelCell: React.FC<PixelCellProps> = ({
   color,
   index
 }) => {
-  const { index : pickedIndex} = usePickedPixel()
+  const { index: pickedIndex } = usePickedPixel()
   return (
     <Box
       _hover={{

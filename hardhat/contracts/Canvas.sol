@@ -32,6 +32,8 @@ contract Canvas is ERC721, Ownable {
     mapping(uint256 => PixelInfo) pixels;
     mapping(uint256 => Colour) pixelColours;
 
+    event ChangedColor(uint256 tokenId, uint8 red, uint8 green, uint8 blue);
+
     modifier onlyTokenOwner(uint256 tokenId) {
         require(ownerOf(tokenId) == msg.sender, "Only the owner of the NFT can apply changes to its current state.");
         _;
@@ -103,8 +105,8 @@ contract Canvas is ERC721, Ownable {
         pixels[pixel] = PixelInfo(0, false, msg.sender);
     }
 
-function buy(uint256 pixel) isAvailableForSell(pixel) payable public {
-        PixelInfo memory currentPixel = pixels[pixel];
+    function buy(uint256 pixel) isAvailableForSell(pixel) payable public {
+        PixelInfo storage currentPixel = pixels[pixel];
         
         require(currentPixel.owner == ownerOf(pixel), "Pixel not owned by current owner");
         require(msg.value >= currentPixel.price, "Insufficient payment");
@@ -113,7 +115,6 @@ function buy(uint256 pixel) isAvailableForSell(pixel) payable public {
         safeTransferFrom(currentPixel.owner, msg.sender, pixel);
         
         payable(currentPixel.owner).transfer(currentPixel.price);
-
         payable(firstOwner).transfer(getRoyalties(currentPixel.price));
 
         pixels[pixel] = PixelInfo(currentPixel.price, false, msg.sender);
@@ -126,6 +127,7 @@ function buy(uint256 pixel) isAvailableForSell(pixel) payable public {
 
     function changeNFTColour(uint256 tokenId, uint8 red, uint8 green, uint8 blue) validToken(tokenId) onlyTokenOwner(tokenId) public {
         pixelColours[tokenId] = Colour(red, green, blue);
+        emit ChangedColor(tokenId, red, green, blue);
     } 
 
     function getNFTColour(uint256 tokenId) validToken(tokenId) public view returns (uint8, uint8, uint8) {

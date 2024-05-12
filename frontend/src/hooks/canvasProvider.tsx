@@ -48,6 +48,16 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
 
   const changeCanvas = (address: string, size: number, title: string) => {
     const contract = new ethers.Contract(address, CanvasContract.abi, signer);
+    contract.on("ChangedColor", (pixelIdx, r, g, b) => {
+      setColors(prevColors => {
+        const newColors = prevColors.map((col, index) =>
+          index == pixelIdx ? { red: r, green: g, blue: b } : col
+        );
+        console.log(newColors); // Here, newColors should reflect the updated state
+        return newColors;
+      });
+    });
+
     setContract(contract);
     setSize(size);
     setTitle(title);

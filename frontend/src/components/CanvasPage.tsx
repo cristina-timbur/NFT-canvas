@@ -34,20 +34,20 @@ const MainPage: React.FC = () => {
     navigate("/", { replace: true });
   };
 
-    useEffect(() => {
-        if (contract !== undefined) {
-            contract.owner()
-            .then((owner) => {
-            signer?.getAddress()
-                .then((signerAddress) => {
-                setIsOwner(owner === signerAddress);
+  useEffect(() => {
+    if (contract !== undefined) {
+      contract.owner()
+        .then((owner) => {
+          signer?.getAddress()
+            .then((signerAddress) => {
+              setIsOwner(owner === signerAddress);
             })
-            })
-            .catch((e) => {
-            console.error(e);
-            });
-        }   
-    }, [contract, isOwner])
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    }
+  }, [contract, isOwner])
 
   const handleTitleChange = () => {
     if (typingTitle.trim()) {
