@@ -60,35 +60,43 @@ const MainPage: React.FC = () => {
 
   return (
     <div>
-      <button onClick={handleNavigateBack}>Back</button>
-      <h2>{title}</h2>
-        {isOwner ?  (
-          <>
-            <Input
-                type="text"
-                placeholder="New title"
-                value={typingTitle}
-                onChange={(e) => setTypingTitle(e.target.value)}
-                minLength={3}
-                maxLength={50}
-                required
-            />
-            <Button onClick={handleTitleChange}>Change Title</Button>
+      <button className="butonback" onClick={handleNavigateBack}>
+        <img className="back" src={require('../css/inapoi.png')}></img>
+      </button>
+
+      <div className="z-10 flex-canvas flex-wrap justify-center lg:gap-y-8">
+        <div className="flex-unu m-5 rounded-3xl bg-onPrimary p-10 shadow-2xl ">
+          <center><p className="text-xl font-bold sm:text-2xl">{title.toUpperCase()}</p></center>
+          <LoadingBar />
+          <PixelGrid />
+        </div>
+
+        <div className="flex-doi flex-col m-5 justify-between gap-5 rounded-3xl bg-onPrimary p-10 shadow-2xl second-div ">
+          <center><p className="text-xl font-bold sm:text-2xl">ACTIONS</p></center>
+
+          {isOwner ? (
+            <>
+              <center><div className="logres-form-div no-margin">
+                <center><p className="logres-form-label title">NEW CANVAS TITLE</p></center>
+                <Input
+                    type="text"
+                    placeholder=""
+                    value={typingTitle}
+                    onChange={(e) => setTypingTitle(e.target.value)}
+                    minLength={3}
+                    maxLength={50}
+                    required
+                    className="new-title-input"
+                />
+                <Button onClick={handleTitleChange} className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton">Change Title</Button>
+              </div></center>
             </>
-        ) 
-          : (<></>)
-        }
-      <LoadingBar />
-            <Flex
-                gridGap='1rem'
-                alignContent='center'
-                justifyContent='center'
-            >
-        <PixelGrid />
-                {index !== undefined &&
-                    <SetColorCard />
-                }
-      </Flex>
+          ) 
+            : (<></>)
+          }
+          {index !== undefined && <SetColorCard />}
+        </div>
+      </div>
     </div>
   );
 }

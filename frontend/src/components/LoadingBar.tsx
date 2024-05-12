@@ -23,7 +23,7 @@ const LoadingBar: React.FC = () => {
         pos='absolute'
         height='100%'
         width='100%'
-        background='linear-gradient(to right, #e5405e 0%, #ffdb3a 45%, #3fffa2 100%);'
+        background='linear-gradient(to right, white 0%, #D8D9F1 10%, #AAACFA 50%, #3943B7 100%);'
       />
       <Box
         pos='absolute'
@@ -36,8 +36,6 @@ const LoadingBar: React.FC = () => {
         <Text zIndex={1} ml='0.5rem'>{`${percent}%`}</Text>
         <Text zIndex={1} fontSize='0.75rem'>{`${colors.length}/${size * size}`}</Text>
       </Flex>
-
-
     </Flex>
   )
 }

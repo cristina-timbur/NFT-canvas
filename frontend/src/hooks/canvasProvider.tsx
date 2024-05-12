@@ -95,9 +95,9 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
         } else {
           newColors.push(newColor)
         }
+        setColors(newColors.map(color => color))
       }
     }
-
     setColors(newColors)
   }, [contract, getNFTColorByToken])
 

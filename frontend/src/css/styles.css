@@ -1,0 +1,390 @@
+html {    
+  tab-size: 4;
+  font-family: 'DM Sans';
+  /* , system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji"; */
+  background-image: url(./backg.png);
+  background-size: 1000px 550px;
+  letter-spacing: 2px;
+  /* background-color: #0008c1; */
+}
+
+.rounded-3xl {
+  border-radius: 1.5rem;
+}
+.gap-5 {
+  gap: 1.25rem;
+}
+.justify-between {
+  justify-content: space-around;
+}
+
+.flex-col {
+  flex-direction: column;
+  width: 300px;
+  height: 480px;
+  margin: auto;
+}
+.flex {
+  display: flex;
+  align-items: center;
+  /* align-items: center; */
+  /* align-content: center; */
+  /* justify-content: center; */
+}
+.center-content {
+  justify-content: center;
+}
+.m-5 {
+  margin: 1.25rem;
+}
+
+.shadow-2xl {
+  --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
+  --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.p-10 {
+  padding: 2.5rem;
+}
+.bg-onPrimary {
+  --tw-bg-opacity: 1;
+  background-color: white;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+.text-xl{
+  font-size: 1.5rem;
+  color: #1E0E62;
+  margin-bottom: 30px;
+}
+
+@media (min-width: 640px) {
+  .sm\:text-lg {
+      font-size: 1.125rem;
+      /* line-height: 1.75rem; */
+  }
+}
+
+.text-onSecondaryContainer {
+  --tw-text-opacity: 1;
+  color: rgb(23, 27, 44);
+}
+.font-medium {
+  font-weight: 500;
+}
+.items-end {
+  align-items: flex-end;
+}
+
+@media (min-width: 1024px) {
+  .lg\:gap-y-8 {
+      row-gap: 2rem;
+  }
+}
+.justify-center {
+  justify-content: center;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.my-8 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.z-10 {
+  z-index: 10;
+}
+.second-div{
+  width: 600px;
+}
+
+body {
+  /* #3863A5 #E86B75 #FFFFFF */
+  --albastru:  #3863A5;
+  --rosu:  #E86B75;
+  --blue1: #ffffff;
+  --blue2: #b8d6ff;
+  --blue3: #2146c7;
+  --blue4: #0008c1;
+  --blue5: #474747;
+  --cream1: #fdf0e0;
+  --cream2: #fee2c5;
+  --cream3: #fcd49f;
+  --light-blue: #04a9c9;
+  --first-color: #2AADE5;
+  --input-color: #616466;
+  --border-color: #EBEAED;
+  --normal-font-size: 1rem;
+  --small-font-size: .75rem;
+  --grey-dark: #c7c7c7;
+  --grey: #EBEAED;
+}
+
+ /* --------------------------------------- Canvas List ----------------------------------------- */
+.mare {
+  width: 100%;
+  height: 100%;
+  /* padding-top: 15px; */
+}
+
+.back {
+  width: 60%;
+  height: 60%;
+}
+
+.butonback {
+  margin: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%; 
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  width:200px;
+  text-decoration: underline;
+}
+
+.container1 {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+.container {
+  max-width: 510px;
+  margin: 0 auto;
+}
+
+.canvas-list {
+  /* margin-top: -200px; */
+  list-style-type: none;
+  padding: 0;
+  color: #3943B7;
+  font-size: 14px;
+}
+
+.canvas-list li {
+  margin-bottom: 10px;
+  padding: 15px;
+  padding-bottom: 0;
+  border-radius: 10px;
+  border: 2px solid #d8d9f1;
+  background-color: white;
+  cursor: pointer;
+  width: 500px;
+}
+
+.canvas-info {
+  margin-right: 10px;
+}
+
+
+.canvas-info-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.canvas-info-item {
+  margin-bottom: 5px;
+}
+
+ /* --------------------------------------- Create Canvas Form ----------------------------------------- */
+.logres-form {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.logres-form-div {
+  position: relative;
+  margin-bottom: 3rem;
+}
+
+.logres-form-input {
+  width: 250px; /* Adjust input width */
+  height: 30px; /* Adjust input height */
+  font-size: var(--normal-font-size);
+  border: 2px solid var(--border-color);
+  border-radius: 5rem;
+  outline: none;
+  padding: 10px;
+  padding-left: 20px;
+  background: none;
+  transition: border-color 0.3s ease;
+  margin-top:0.5rem;
+}
+
+.logres-form-label {
+  position: absolute;
+  top:-1.5rem;
+  /* left: 15%; */
+  padding: 0.25rem;
+  margin-bottom: 0.2rem;
+  background-color: #fff;
+  color: #1E0E62;
+  font-size: var(--normal-font-size);
+  transition: .3s;
+}
+
+.logres-form-input:focus + .logres-form-label,
+.logres-form-input:not(:placeholder-shown) + .logres-form-label {
+  top: -.85rem; /* Adjust label position */
+  left: 0.85rem; /* Adjust label position */
+  font-size: var(--small-font-size);
+  color: var(--first-color);
+}
+
+.logres-form-button {
+  display: inline-block; /* Change to inline-block to center */
+  padding: .6rem 1.1rem;
+  outline: none;
+  border: none;
+  background-color: #3943B7;
+  color: #fff;
+  /* font-size: 1.2rem; */
+  border-radius: 1.3rem;
+  width: 10rem;
+  cursor: pointer;
+  transition: .3s;
+  margin-top: 0px;
+}
+
+.logres-form-button:hover {
+  color: rgb(246, 235, 235);
+  
+  /* box-shadow: 0 10px 12px rgba(0,0,0,.15); */
+}
+
+
+.new-title-input {
+  width: 250px; /* Adjust input width */
+  height: 25px; /* Adjust input height */
+  font-size: var(--normal-font-size);
+  border: 2px solid var(--border-color);
+  border-radius: 5rem;
+  outline: none;
+  padding: 10px;
+  padding-left: 20px;
+  background: none;
+  transition: border-color 0.3s ease;
+  margin-top: 25px;
+  margin-right: 30px;
+}
+
+.title {
+  left: 2%;
+}
+
+.buton {
+  height: 47px; /* Adjust input height */
+}
+
+.flex-unu {
+  width: 400px;
+  height: 450px;
+}
+
+.flex-doi {
+  width: 500px;
+  height: 450px;
+}
+
+.flex-canvas {
+  display: flex;
+  align-content: center;
+  justify-items: center;
+}
+
+.pixel-text {
+  color: #3943B7;
+  font-weight: bold;
+  font-size:larger;
+  margin-left: 4%;
+  margin-top: 60px;
+}
+
+.flex-actions {
+  display: flex;
+  flex-direction: row;
+}
+
+.buton-color {
+  width: 100px;
+  height: 50px;
+  border: 1px solid #d8d9f1;
+  cursor: pointer;
+  margin-left: 0px;
+}
+
+.buton-col {
+  margin-top: -35px;
+  margin-left: 50px;
+  margin-right: 150px;
+}
+
+/* .new-color-input {
+  width: 250px; 
+  height: 25px;
+  font-size: var(--normal-font-size);
+  border: 2px solid var(--border-color);
+  border-radius: 5rem;
+  outline: none;
+  padding: 10px;
+  padding-left: 20px;
+  background: none;
+  transition: border-color 0.3s ease;
+  margin-top: 25px;
+  margin-right: 30px;
+} */
+
+.no-margin {
+  position: relative;
+  margin: 0;
+}
+
+.new-price-input {
+  width: 90px; /* Adjust input width */
+  height: 25px; /* Adjust input height */
+  font-size: var(--normal-font-size);
+  border: 2px solid var(--border-color);
+  border-radius: 5rem;
+  outline: none;
+  padding: 10px;
+  padding-left: 20px;
+  background: none;
+  transition: border-color 0.3s ease;
+  margin-top: 25px;
+  margin-right: 30px;
+  margin-left: -150px;
+}
+
+.price-label {
+  position: absolute;
+  top:-1.5rem;
+  left: -150px;
+  padding: 0.25rem;
+  margin-bottom: 0.2rem;
+  background-color: #fff;
+  color: #1E0E62;
+  font-size: var(--normal-font-size);
+  transition: .3s;
+}
+
+.our-for-sale-text {
+  margin-left: -80px;
+  margin-right: 40px;
+}
+
+.loading {
+  font-size: 20px;
+}

@@ -33,57 +33,97 @@ const MainPage: React.FC = () => {
   };
 
   return (
-    <div>
-      {
-        loading ? <p>Loading....</p> :
-          <ul>
-            {
-              canvases.map((canvasInfo, idx) => (
-                <li key={idx} onClick={() => handleChangeCanvas(canvasInfo.address, Number(canvasInfo.size), canvasInfo.title)}>Address={canvasInfo.address} size={canvasInfo.size.toString()} title={canvasInfo.title}</li>
-              ))
+    <div className="z-10 my-8 flex flex-wrap justify-center lg:gap-y-8">
+      <div className="flex flex-col m-5 justify-between gap-5 rounded-3xl bg-onPrimary p-10 shadow-2xl ">
+        <center><p className="text-xl font-bold sm:text-2xl">CREATE CANVAS</p></center>
+  
+        <form onSubmit={handleCanvasCreation} className="logres-form">
+          <div className="logres-form-div">
+            <label htmlFor="sizeInput" className="logres-form-label">CANVAS SIZE</label>
+            <input
+              type="number"
+              id="sizeInput"
+              value={size}
+              onChange={(e) => setSize(parseInt(e.target.value))}
+              min={3}
+              max={10}
+              required
+              className="logres-form-input"
+            />
+          </div>
+          <div className="logres-form-div">
+            <label htmlFor="royaltyInput" className="logres-form-label">ROYALTY PERCENT</label>
+            <input
+              type="number"
+              id="royaltyInput"
+              value={royaltyPercent}
+              onChange={(e) => setRoyaltyPercent(parseInt(e.target.value))}
+              min={0}
+              max={99}
+              required
+              className="logres-form-input"
+            />
+          </div>
+          <div className="logres-form-div">
+            <label htmlFor="titleInput" className="logres-form-label">CANVAS TITLE</label>
+            <input
+              type="text"
+              id="titleInput"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              minLength={3}
+              maxLength={50}
+              required
+              className="logres-form-input"
+            />
+          </div>
+          <button type="submit" className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button">Submit</button>
+        </form>
+      </div>
+      <div className="flex flex-col m-5 justify-between gap-5 rounded-3xl bg-onPrimary p-10 shadow-2xl second-div ">
+        <center><p className="text-xl font-bold sm:text-2xl">EXISTING CANVASES</p></center>
+        {
+          loading ? <>
+            <div className="container1">
+              <center><img className="mare" src={require('../css/lista.png')} alt="Image Description" /></center>
+              <center><div className="centered">Loading...</div></center>
+            </div>
+          </>
+          : 
+          <>          
+            { canvases.length == 0 ?
+              <>
+                <div className="container1">
+                  <center><img className="mare" src={require('../css/lista.png')} alt="Image Description" /></center>
+                  <center><div className="centered">Empty, create a canvas first</div></center>
+                </div>
+              </>
+              : 
+              <>
+                <ul className="canvas-list flex flex-col m-5 center-content">
+                  {
+                    canvases.map((canvasInfo, idx) => (
+                      <li key={idx} onClick={() => handleChangeCanvas(canvasInfo.address, Number(canvasInfo.size), canvasInfo.title)}>
+                        <div className="canvas-info-container">
+                          <div className="canvas-info-item">
+                            CANVAS TITLE: <b>{canvasInfo.title}</b>
+                          </div>
+                          <div className="canvas-info-item">
+                            CANVAS SIZE: <b>{canvasInfo.size.toString()}</b>
+                          </div>
+                          <div className="canvas-info-item">
+                            ADDRESS: <b>{canvasInfo.address}</b>
+                          </div>
+                        </div>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </>
             }
-          </ul>
-      }
-
-      <form onSubmit={handleCanvasCreation}>
-        <div>
-          <label htmlFor="sizeInput">Enter the canvas size (between 3 and 15):</label>
-          <input
-            type="number"
-            id="sizeInput"
-            value={size}
-            onChange={(e) => setSize(parseInt(e.target.value))}
-            min={3}
-            max={15}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="royaltyInput">Enter the royalty percent (between 0 and 99):</label>
-          <input
-            type="number"
-            id="royaltyInput"
-            value={royaltyPercent}
-            onChange={(e) => setRoyaltyPercent(parseInt(e.target.value))}
-            min={0}
-            max={99}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="titleInput">Enter a title (between 3 and 50 chars):</label>
-          <input
-            type="text"
-            id="titleInput"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            minLength={3}
-            maxLength={50}
-            required
-          />
-        </div>
-        <button type="submit">Create canvas</button>
-      </form>
+          </>
+        }
+      </div>
     </div>
   );
 }

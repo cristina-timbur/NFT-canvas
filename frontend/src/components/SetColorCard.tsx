@@ -134,51 +134,48 @@ const SetColorCard: React.FC = () => {
   }, [shootEffect])
 
   return (
-    <Flex
-      bgColor='#BFBFBF'
-      borderRadius='0.5rem'
-      flexDir='column'
-      padding='0.5rem'
-      alignItems='center'
-      gridGap='0.5rem'
-      width='6rem'
-    >
-      <Text>{`Pixel: ${index}`}</Text>
-
-      {isOwner ? (
-        <>
-          <Input type='color' value={currentColor} onChange={onColorPicked}/>
-          <Button onClick={onSetPress}>Set Color</Button>
-          {!isForSale ? (
-            <>
-              <Input
-                type='number'
-                placeholder='Sale Price'
-                value={salePrice}
-                onChange={onPriceSet}
-              />
-              <Button onClick={putForSale}>Put for Sale</Button>
-            </>
-          ) : (
-            <Button onClick={revertSell}>Revert Sell</Button>
-          )}
-        </>
-      ) : (
-        isForSale && (
+    <>
+      <Text className='pixel-text'>{`PIXEL ${index}`}</Text>
+      <div className="z-10 flex-actions flex-wrap justify-center lg:gap-y-8">
+        {isOwner ? (
           <>
-            <Text>{`This pixel is out for sale for ${salePrice}`}</Text>
-            {isBuying ? (
-              <Text>Loading...</Text>
+          <div className="no-margin">
+            <Input type='color' value={currentColor} onChange={onColorPicked} className="buton-color"/>
+            <Button onClick={onSetPress} className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton buton-col">Set Color</Button>
+          </div>
+            {!isForSale ? (
+              <div className="no-margin">
+                <center><p className="price-label">PRICE</p></center>
+                <Input
+                  type='number'
+                  placeholder=''
+                  value={salePrice}
+                  onChange={onPriceSet}
+                  className="new-price-input"
+                />
+                <Button onClick={putForSale} className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton">Put for Sale</Button>
+              </div>
             ) : (
-              <Button onClick={buyPixel}>Buy Pixel</Button>
+              <Button onClick={revertSell} className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton">Revert Sell</Button>
             )}
           </>
-        )
-      )}  
-      
-      <Button onClick={refreshPixel}>{isLoading ? 'Loading...' :'Refresh Pixel'}</Button>
-
-    </Flex>
+        ) : (
+          isForSale && (
+            <>
+              {isBuying ? (
+                <Text className='loading'>LOADING...</Text>
+              ) : (
+                <>
+                <Text className='our-for-sale-text'>{`PIXEL PRICE: ${salePrice} WEI`}</Text>
+                <Button onClick={buyPixel} className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton ">Buy Pixel</Button>
+                </>
+              )}
+            </>
+          )
+        )}  
+        {/* <Button onClick={refreshPixel} className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton">{isLoading ? 'Loading...' :'Refresh Pixel'}</Button> */}
+      </div>
+    </>
   );
 };
 
