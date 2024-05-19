@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { Select } from "@chakra-ui/react";
 import useFactory from "../hooks/factoryProvider";
 import useCanvas from "../hooks/canvasProvider";
 import { useNavigate } from 'react-router-dom';
 
 const MainPage: React.FC = () => {
   const navigate = useNavigate();
-  const { canvases, loading, createCanvas, setCurrentCanvasAddress } = useFactory()
+  const { canvases, loading, createCanvas, setCurrentCanvasAddress, setSignerIndex, signerIndex } = useFactory()
   const { changeCanvas } = useCanvas()
 
   const handleChangeCanvas = (address: string, size: number, title: string) => {
@@ -34,6 +35,25 @@ const MainPage: React.FC = () => {
 
   return (
     <div className="z-10 my-8 flex flex-wrap justify-center lg:gap-y-8">
+      <div className="flex flex-col m-5 justify-start gap-5 rounded-3xl bg-onPrimary p-10 shadow-2xl zero-div ">
+        <center><p className="text-xl font-bold sm:text-2xl">SELECT SIGNER</p></center>
+        <center>
+          <Select size='lg' className="select"  onChange={item => setSignerIndex(item.currentTarget.value)} value={signerIndex ? signerIndex : '0'}>
+            <option value='0'>Signer 0</option>
+            <option value='1'>Signer 1</option>
+            <option value='2'>Signer 2</option>
+            <option value='3'>Signer 3</option>
+            <option value='4'>Signer 4</option>
+            <option value='5'>Signer 5</option>
+            <option value='6'>Signer 6</option>
+            <option value='7'>Signer 7</option>
+            <option value='8'>Signer 8</option>
+            <option value='9'>Signer 9</option>
+          </Select>
+        </center>
+        <center><img className="mic" src={require('../css/finger.png')} alt="Image Description" /></center>
+
+      </div>
       <div className="flex flex-col m-5 justify-between gap-5 rounded-3xl bg-onPrimary p-10 shadow-2xl ">
         <center><p className="text-xl font-bold sm:text-2xl">CREATE CANVAS</p></center>
   
@@ -80,7 +100,7 @@ const MainPage: React.FC = () => {
           <button type="submit" className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button">Submit</button>
         </form>
       </div>
-      <div className="flex flex-col m-5 justify-between gap-5 rounded-3xl bg-onPrimary p-10 shadow-2xl second-div ">
+      <div className="flex flex-col m-5 justify-start gap-5 rounded-3xl bg-onPrimary p-10 shadow-2xl second-div">
         <center><p className="text-xl font-bold sm:text-2xl">EXISTING CANVASES</p></center>
         {
           loading ? <>

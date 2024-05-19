@@ -9,17 +9,21 @@ type FactoryContextValue = {
   signer?: ethers.JsonRpcSigner;
   canvases: CanvasInfo[],
   loading: boolean,
+  signerIndex: string,
   createCanvas: (size: number, royaltyPercent: number, title: string) => Promise<void>,
   handleChangeTitle: (title: string) => void,
-  setCurrentCanvasAddress: (address: string) => void
+  setCurrentCanvasAddress: (address: string) => void,
+  setSignerIndex: (index: string) => void
 }
 
 const defaultValue: FactoryContextValue = {
   canvases: [],
   loading: false,
+  signerIndex: "Signer 0",
   createCanvas: async () => { },
   handleChangeTitle: async (title: string) => { },
-  setCurrentCanvasAddress: () => { }
+  setCurrentCanvasAddress: () => { },
+  setSignerIndex: () => { }
 }
 
 const FactoryContext = createContext<FactoryContextValue>(defaultValue)
@@ -37,6 +41,7 @@ export const FactoryProvider: React.FC<FactoryProviderProps> = ({
   const [canvases, setCanvases] = useState<CanvasInfo[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [currentCanvasAddress, setCurrentCanvasAddress] = useState<string>("")
+  const [signerIndex, setSignerIndex] = useState<string>('0')
 
   const populateCanvases = async (provider: ethers.JsonRpcProvider, factory_contract: ethers.Contract) => {
     const creationEventFilter = {
@@ -99,7 +104,7 @@ export const FactoryProvider: React.FC<FactoryProviderProps> = ({
     const localhostProvider = new ethers.JsonRpcProvider();
     setProvider(localhostProvider);
 
-    const account = await localhostProvider.getSigner(0);
+    const account = await localhostProvider.getSigner(parseInt(signerIndex));
     setSigner(account);
 
     const factory_contract = new ethers.Contract(FACTORY_CONTRACT_ADDRESS, FactoryContract.abi, account);
@@ -120,7 +125,7 @@ export const FactoryProvider: React.FC<FactoryProviderProps> = ({
     } catch (error) {
       console.error(error)
     }
-  }, [])
+  }, [signerIndex])
 
   const refreshCanvases = async () => {
     if (provider !== undefined && contract !== undefined)
@@ -147,6 +152,8 @@ export const FactoryProvider: React.FC<FactoryProviderProps> = ({
       setCurrentCanvasAddress: setCurrentCanvasAddress,
       loading: loading,
       createCanvas: createCanvas,
+      signerIndex: signerIndex,
+      setSignerIndex: setSignerIndex
     }}>
       {children}
     </FactoryContext.Provider>
