@@ -1,5 +1,4 @@
-import { ethers } from 'ethers'
-import { Button, Flex, Input, Text } from '@chakra-ui/react'
+import { Button, Input, Text } from '@chakra-ui/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import useCanvas from '../hooks/canvasProvider'
 import usePickedPixel from '../hooks/pickedPixelProvider'
@@ -10,7 +9,7 @@ const SetColorCard: React.FC = () => {
 
   const { index } = usePickedPixel()
   const { contract, colors, setColor, refreshToken } = useCanvas()
-  const { signer } = useFactory()
+  const { signer, provider } = useFactory()
 
   const [currentColor, setCurrentColor] = useState<string>('#000000')
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -19,6 +18,8 @@ const SetColorCard: React.FC = () => {
   const [salePrice, setSalePrice] = useState<number>(0)
   const [isForSale, setIsForSale] = useState<boolean>(false)
   const [isBuying, setIsBuying] = useState<boolean>(false)
+
+  const [gasCost, setGasCost] = useState<string>("")
 
   useEffect(() => {
     if (index !== undefined && contract !== undefined && signer !== undefined) {
@@ -121,6 +122,21 @@ const SetColorCard: React.FC = () => {
     }
   }, [index, contract]);
 
+  const estimateGasCost = async () => {
+    if (contract !== undefined && signer !== undefined && provider !== undefined) {
+      let estimatedGas = await contract.changeNFTColour.estimateGas(index, 0, 0, 0);
+      console.log(estimatedGas)
+
+      let gasPrice = (await provider.getFeeData()).gasPrice
+      console.log(gasPrice)
+
+      let costInWei = estimatedGas * (gasPrice ? gasPrice : BigInt(0))
+      console.log(costInWei) // cost in wei
+
+      setGasCost(costInWei.toString() + " wei");
+    }
+  }
+
   useEffect(() => {
     setIsLoading(true)
     try {
@@ -139,10 +155,10 @@ const SetColorCard: React.FC = () => {
       <div className="z-10 flex-actions flex-wrap justify-center lg:gap-y-8">
         {isOwner ? (
           <>
-          <div className="no-margin">
-            <Input type='color' value={currentColor} onChange={onColorPicked} className="buton-color"/>
-            <Button onClick={onSetPress} className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton buton-col">Set Color</Button>
-          </div>
+            <div className="no-margin">
+              <Input type='color' value={currentColor} onChange={onColorPicked} className="buton-color" />
+              <Button onClick={onSetPress} className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton buton-col">Set Color</Button>
+            </div>
             {!isForSale ? (
               <div className="no-margin">
                 <center><p className="price-label">PRICE</p></center>
@@ -158,6 +174,12 @@ const SetColorCard: React.FC = () => {
             ) : (
               <Button onClick={revertSell} className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton">Revert Sell</Button>
             )}
+
+            <div onClick={estimateGasCost} style={{ border: '3px solid red' }}>
+              <Button className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton">Gas cost</Button>
+              <p>{gasCost}</p>
+            </div>
+
           </>
         ) : (
           isForSale && (
@@ -166,13 +188,13 @@ const SetColorCard: React.FC = () => {
                 <Text className='loading'>LOADING...</Text>
               ) : (
                 <>
-                <Text className='our-for-sale-text'>{`PIXEL PRICE: ${salePrice} WEI`}</Text>
-                <Button onClick={buyPixel} className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton ">Buy Pixel</Button>
+                  <Text className='our-for-sale-text'>{`PIXEL PRICE: ${salePrice} WEI`}</Text>
+                  <Button onClick={buyPixel} className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton ">Buy Pixel</Button>
                 </>
               )}
             </>
           )
-        )}  
+        )}
       </div>
     </>
   );

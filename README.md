@@ -96,4 +96,4 @@ Pentru popularea paginii principale, aplicatia ReactJs citeste toate event-urile
 3. Tratare events:
     - evenimentele generate de [Factory](hardhat/contracts/Factory.sol) populeaza lista de canvas-uri din frontend: [factoryProvider](frontend/src/hooks/factoryProvider.tsx)
     - evenimentele generate de schimbarea culorii unui pixel coloreaza celula corespunzatoare din frontend: [canvasProvider](frontend/src/hooks/canvasProvider.tsx)
-4. Analiza gaz-cost: TODO
+4. Analiza gaz-cost: costul gazului estimat pentru schimbarea culorii unui anumit pixel
