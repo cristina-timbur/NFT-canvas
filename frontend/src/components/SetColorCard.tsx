@@ -8,7 +8,7 @@ import useFactory from "../hooks/factoryProvider"
 const SetColorCard: React.FC = () => {
 
   const { index } = usePickedPixel()
-  const { contract, colors, setColor, refreshToken } = useCanvas()
+  const { contract, colors, setColor, refreshToken, refreshBalance } = useCanvas()
   const { signer, provider } = useFactory()
 
   const [currentColor, setCurrentColor] = useState<string>('#000000')
@@ -87,9 +87,11 @@ const SetColorCard: React.FC = () => {
       contract.sell(index, salePrice)
         .then(() => {
           setIsForSale(true);
+          refreshBalance();
         })
         .catch((error) => {
           console.error(error);
+          refreshBalance();
         });
     }
   }, [index, contract, salePrice]);
@@ -106,6 +108,7 @@ const SetColorCard: React.FC = () => {
         console.error("Error buying pixel:", error);
       } finally {
         setIsBuying(false);
+        refreshBalance();
       }
     }
   }, [index, contract, salePrice]);
@@ -115,9 +118,11 @@ const SetColorCard: React.FC = () => {
       contract.revertSell(index)
         .then(() => {
           setIsForSale(false);
+          refreshBalance();
         })
         .catch((error) => {
           console.error("Error reverting sell:", error);
+          refreshBalance();
         });
     }
   }, [index, contract]);
@@ -125,13 +130,8 @@ const SetColorCard: React.FC = () => {
   const estimateGasCost = async () => {
     if (contract !== undefined && signer !== undefined && provider !== undefined) {
       let estimatedGas = await contract.changeNFTColour.estimateGas(index, 0, 0, 0);
-      console.log(estimatedGas)
-
       let gasPrice = (await provider.getFeeData()).gasPrice
-      console.log(gasPrice)
-
       let costInWei = estimatedGas * (gasPrice ? gasPrice : BigInt(0))
-      console.log(costInWei) // cost in wei
 
       setGasCost(costInWei.toString() + " WEI");
     }

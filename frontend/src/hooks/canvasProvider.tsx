@@ -9,6 +9,8 @@ type CanvasContextValue = {
   size: number,
   title: string,
   colors: Color[];
+  balance: bigint;
+  refreshBalance: () => void;
   setTitle: (title: string) => void;
   changeCanvas: (address: string, size: number, title: string) => void;
   unsetCanvas: () => void;
@@ -20,6 +22,8 @@ const defaultValue: CanvasContextValue = {
   colors: [],
   size: 1,
   title: "",
+  balance: BigInt(0),
+  refreshBalance: () => { },
   setTitle: () => { },
   changeCanvas: () => { },
   unsetCanvas: () => { },
@@ -38,6 +42,9 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
 }) => {
   // etherjs state
   const { provider, signer } = useFactory();
+
+  // account-specific state
+  const [balance, setBalance] = useState<bigint>(BigInt(0))
 
   // canvas-specific state
   const [contract, setContract] = useState<ethers.Contract>()
@@ -71,6 +78,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
 
   const getNFTColorByToken = useCallback(async (tokenId: number): Promise<Color | undefined> => {
     const color = await contract?.getNFTColour(tokenId)
+    refreshBalance();
     if (color) {
       return {
         red: color[0],
@@ -84,6 +92,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
 
   const setColor = useCallback(async (tokenId: number, color: Color) => {
     await contract?.changeNFTColour(tokenId, color.red, color.green, color.blue)
+    refreshBalance();
   }, [contract])
 
   const refreshToken = useCallback(async (tokenId: number) => {
@@ -91,6 +100,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
     if (newColor !== undefined) {
       setColors(colors.map((color, index) => index === tokenId ? newColor : color))
     }
+    refreshBalance();
   }, [colors, getNFTColorByToken])
 
   const createCanvas = useCallback(async () => {
@@ -111,10 +121,17 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
     setColors(newColors)
   }, [contract, getNFTColorByToken])
 
+  const refreshBalance = async () => {
+    if (provider !== undefined && signer !== undefined) {
+      const balance = await provider.getBalance(signer.address);
+      setBalance(balance);
+    }
+  }
 
   useEffect(() => {
     if (contract !== undefined && signer !== undefined && provider !== undefined) {
       try {
+        refreshBalance();
         createCanvas()
       } catch (error) {
         console.error(error);
@@ -129,6 +146,8 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
       size: size,
       title: title ? title : "",
       colors: colors,
+      balance: balance,
+      refreshBalance: refreshBalance,
       setTitle: setTitle,
       changeCanvas: changeCanvas,
       unsetCanvas: unsetCanvas,

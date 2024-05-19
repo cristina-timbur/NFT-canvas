@@ -11,7 +11,7 @@ import useFactory from "../hooks/factoryProvider";
 const MainPage: React.FC = () => {
   const navigate = useNavigate();
   const { index } = usePickedPixel();
-  const { title, unsetCanvas, contract, setTitle } = useCanvas();
+  const { title, balance, unsetCanvas, contract, setTitle, refreshBalance } = useCanvas();
   const { handleChangeTitle, signer } = useFactory();
   const [typingTitle, setTypingTitle] = useState<string>("");
   const [isOwner, setIsOwner] = useState<boolean>(false)
@@ -53,6 +53,7 @@ const MainPage: React.FC = () => {
     if (typingTitle.trim()) {
       handleChangeTitle(typingTitle);
       setTitle(typingTitle);
+      refreshBalance();
     } else {
       console.error("Title cannot be empty");
     }
@@ -63,6 +64,8 @@ const MainPage: React.FC = () => {
       <button className="butonback" onClick={handleNavigateBack}>
         <img className="back" src={require('../css/inapoi.png')}></img>
       </button>
+
+      <p>Balance: {balance.toString()} wei</p>
 
       <div className="z-10 flex-canvas flex-wrap justify-center lg:gap-y-8">
         <div className="flex-unu m-5 rounded-3xl bg-onPrimary p-10 shadow-2xl ">
