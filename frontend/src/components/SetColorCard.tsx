@@ -133,7 +133,7 @@ const SetColorCard: React.FC = () => {
       let costInWei = estimatedGas * (gasPrice ? gasPrice : BigInt(0))
       console.log(costInWei) // cost in wei
 
-      setGasCost(costInWei.toString() + " wei");
+      setGasCost(costInWei.toString() + " WEI");
     }
   }
 
@@ -160,7 +160,7 @@ const SetColorCard: React.FC = () => {
               <Button onClick={onSetPress} className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton buton-col">Set Color</Button>
             </div>
             {!isForSale ? (
-              <div className="no-margin">
+              <div className="no-margin gazcost">
                 <center><p className="price-label">PRICE</p></center>
                 <Input
                   type='number'
@@ -172,12 +172,12 @@ const SetColorCard: React.FC = () => {
                 <Button onClick={putForSale} className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton">Put for Sale</Button>
               </div>
             ) : (
-              <Button onClick={revertSell} className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton">Revert Sell</Button>
+              <Button onClick={revertSell} className="flex items-end revert font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton">Revert Sell</Button>
             )}
 
-            <div onClick={estimateGasCost} style={{ border: '3px solid red' }}>
-              <Button className="flex items-end font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton">Gas cost</Button>
-              <p>{gasCost}</p>
+            <div className="flex margin" >
+              <Text className="new-gaz-input">{gasCost}</Text>
+              <Button onClick={estimateGasCost} className="font-medium text-onSecondaryContainer sm:text-lg logres-form-button buton gazbuton">Gas Cost</Button>
             </div>
 
           </>
