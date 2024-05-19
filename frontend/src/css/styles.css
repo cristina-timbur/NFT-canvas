@@ -136,13 +136,21 @@ body {
 }
 
 .butonback {
-  margin: 20px;
+  margin: 10px 20px 20px 0px;
   background: transparent;
   border: none;
   cursor: pointer;
 }
 
-
+.balance {
+  width: 270px;
+  border: 2px solid white;
+  border-radius: 5px;
+  padding: 5px;
+  color: #2c36a7;
+  /* font-weight: 300; */
+  background-color:  white;
+}
 
 .centered {
   position: absolute;
@@ -376,6 +384,10 @@ body {
 }
 .margin {
   margin: 0px 0px 0px -95px;
+}
+
+.marginr-950 {
+  margin-right: 900px;
 }
 
 .price-label {

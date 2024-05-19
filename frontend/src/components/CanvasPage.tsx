@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from "react";
-import { Flex, Input, Button } from "@chakra-ui/react";
+import { Text, Input, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import usePickedPixel from "../hooks/pickedPixelProvider";
 import LoadingBar from "./LoadingBar";
@@ -61,12 +61,13 @@ const MainPage: React.FC = () => {
 
   return (
     <div>
-      <button className="butonback" onClick={handleNavigateBack}>
-        <img className="back" src={require('../css/inapoi.png')}></img>
-      </button>
+      <div className="flex justify-between" >
+        <button className="butonback marginr-950" onClick={handleNavigateBack}>
+          <img className="back" src={require('../css/inapoi.png')}></img>
+        </button>
 
-      <p>Balance: {balance.toString()} wei</p>
-
+        <Text className="balance"><center><span style={{color: '#1E0E62'}}><b>BALANCE</b></span> {balance.toString()} WEI </center></Text>
+      </div>
       <div className="z-10 flex-canvas flex-wrap justify-center lg:gap-y-8">
         <div className="flex-unu m-5 rounded-3xl bg-onPrimary p-10 shadow-2xl ">
           <center><p className="text-xl font-bold sm:text-2xl">{title.toUpperCase()}</p></center>
